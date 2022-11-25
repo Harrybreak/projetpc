@@ -1,6 +1,6 @@
-package version.v1;
+package prodcons.v2;
 
-public class Starter {
+public class TestProdCons {
 	public static void main(String[] args) {
 		
 	}
