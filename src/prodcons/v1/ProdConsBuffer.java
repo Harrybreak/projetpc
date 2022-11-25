@@ -56,7 +56,6 @@ public class ProdConsBuffer implements IProdConsBuffer{
 		nb--;
 		notifyAll();
 		return msg;
-		
 	}
 
 	@Override
@@ -68,5 +67,4 @@ public class ProdConsBuffer implements IProdConsBuffer{
 	public int totmsg() {
 		return total;
 	}
-	
 }

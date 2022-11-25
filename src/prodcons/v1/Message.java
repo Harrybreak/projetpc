@@ -17,5 +17,4 @@ public class Message {
 	public String get_content() {
 		return content;
 	}
-
 }
