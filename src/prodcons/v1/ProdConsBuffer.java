@@ -2,6 +2,7 @@ package prodcons.v1;
 
 public class ProdConsBuffer implements IProdConsBuffer{
 
+	private static ProdConsBuffer instance;
 	private Message buffer[];
 	private final int size;
 
@@ -11,7 +12,7 @@ public class ProdConsBuffer implements IProdConsBuffer{
 	private int ind_put;
 	private int ind_get;
 	
-	public ProdConsBuffer(int n) {
+	private ProdConsBuffer(int n) {
 		this.buffer = new Message[n];
 		this.size = n;
 		
@@ -20,6 +21,12 @@ public class ProdConsBuffer implements IProdConsBuffer{
 		
 		this.ind_put = 0;
 		this.ind_get = 0;
+	}
+	
+	public static synchronized ProdConsBuffer getInstance(int n) {
+		if (instance == null)
+			instance = new ProdConsBuffer(n);
+		return instance;
 	}
 	
 	@Override
