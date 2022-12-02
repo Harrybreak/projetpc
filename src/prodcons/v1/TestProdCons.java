@@ -1,5 +1,6 @@
 package prodcons.v1;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
@@ -29,7 +30,7 @@ public class TestProdCons {
 	
 	static void loadData() throws InvalidPropertiesFormatException, IOException {
 		Properties properties = new Properties();
-		properties.loadFromXML(TestProdCons.class.getClassLoader().getResourceAsStream("options.xml"));
+		properties.loadFromXML(new FileInputStream("options.xml"));
 		
 		nProd = Integer.parseInt(properties.getProperty("nProd"));
 		nCons = Integer.parseInt(properties.getProperty("nCons"));
