@@ -5,7 +5,7 @@ import java.util.concurrent.Semaphore;
 public class ProdConsBuffer implements IProdConsBuffer{
 
 	private static ProdConsBuffer instance;
-	private static Semaphore s;
+	private Semaphore s;
 	private Message buffer[];
 	private final int size;
 
@@ -26,11 +26,12 @@ public class ProdConsBuffer implements IProdConsBuffer{
 		
 		this.ind_put = 0;
 		this.ind_get = 0;
+		
+		this.s = new Semaphore(1);
 	}
 	
 	public static synchronized ProdConsBuffer getInstance(int n) {
 		if (instance == null) {
-			s = new Semaphore(1);
 			instance = new ProdConsBuffer(n);
 		}
 		return instance;
@@ -44,7 +45,6 @@ public class ProdConsBuffer implements IProdConsBuffer{
 		buffer[ind_put] = m;
 		
 		nb++;
-		total++;
 		
 		if(ind_put == size-1) {
 			ind_put = 0;
@@ -83,7 +83,7 @@ public class ProdConsBuffer implements IProdConsBuffer{
 		try {
 			Message[] msgs = new Message[k];
 			s.acquire();
-			for (Message msg : msgs) {
+			for (@SuppressWarnings("unused") Message msg : msgs) {
 				msg = this.get();
 			}
 			return msgs;
@@ -100,5 +100,9 @@ public class ProdConsBuffer implements IProdConsBuffer{
 	@Override
 	public int totmsg() {
 		return total;
+	}
+
+	public void incrTot(long restants) {
+		this.total += (int) restants;
 	}
 }

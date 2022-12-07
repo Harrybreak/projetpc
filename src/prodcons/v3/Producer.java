@@ -5,13 +5,16 @@ public class Producer implements Runnable{
 	private long temps;
 	private long restants;
 	
-	public Producer(long nMin, long nMax, long temps) {
+	public Producer(long nMin, long nMax, long temps) throws InterruptedException {
 		this.temps = temps;
 		this.restants = (long)
 				(Math.random() * (double)(nMax - nMin)) + nMin;
 		this.th = new Thread(this);
 		this.th.start();
-		System.out.printf("Producer Thread %d will create %d messages.\n", this.th.getId(), this.restants);
+		System.out.printf(
+				"Producer Thread %d will create %d messages.\n",
+				this.th.getId(), this.restants);
+		ProdConsBuffer.getInstance(TestProdCons.TAILLE).incrTot(this.restants);
 	}
 	
 	@Override

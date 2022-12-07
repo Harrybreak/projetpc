@@ -11,7 +11,10 @@ public class Producer implements Runnable{
 				(Math.random() * (double)(nMax - nMin)) + nMin;
 		this.th = new Thread(this);
 		this.th.start();
-		System.out.printf("Producer Thread %d will create %d messages.\n", this.th.getId(), this.restants);
+		System.out.printf(
+				"Producer Thread %d will create %d messages.\n", 
+				this.th.getId(), this.restants);
+		ProdConsBuffer.getInstance(TestProdCons.TAILLE).incrTot(this.restants);
 	}
 	
 	@Override
@@ -21,7 +24,6 @@ public class Producer implements Runnable{
 				Thread.sleep(this.temps);
 				ProdConsBuffer.getInstance(TestProdCons.TAILLE).put(new Message("q"));
 				restants--;
-				System.out.printf("Producer Thread %d has produced 1 message, %d remaining messages\n", this.th.getId(), this.restants);
 			}
 			catch (InterruptedException e) {
 				e.printStackTrace();

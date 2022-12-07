@@ -2,10 +2,15 @@ package prodcons.v6;
 
 import java.util.concurrent.Semaphore;
 
+/**
+ * Pour cette version, nous avons corrigé le problème d'incohérence des flux de message
+ * de debug en déplaçant les printf dans le fichier ProdConsBuffer.java !
+ */
+
 public class ProdConsBuffer implements IProdConsBuffer{
 
 	private static ProdConsBuffer instance;
-	private static Semaphore s;
+	private Semaphore s;
 	private Message buffer[];
 	private final int size;
 
@@ -26,11 +31,12 @@ public class ProdConsBuffer implements IProdConsBuffer{
 		
 		this.ind_put = 0;
 		this.ind_get = 0;
+		
+		this.s = new Semaphore(1);
 	}
 	
 	public static synchronized ProdConsBuffer getInstance(int n) {
 		if (instance == null) {
-			s = new Semaphore(1);
 			instance = new ProdConsBuffer(n);
 		}
 		return instance;
@@ -44,13 +50,12 @@ public class ProdConsBuffer implements IProdConsBuffer{
 		buffer[ind_put] = m;
 		
 		nb++;
-		total++;
 		
-		if(ind_put == size-1) {
-			ind_put = 0;
-		} else {
-			ind_put++;
-		}
+		ind_put = (ind_put == size-1) ? 0 : ind_put + 1;
+		
+		System.out.printf("Producer Thread %d has produced 1 message\n", 
+				Thread.currentThread().getId());
+		
 		notifyAll();
 	}
 
@@ -66,13 +71,13 @@ public class ProdConsBuffer implements IProdConsBuffer{
 		}
 		Message msg = buffer[ind_get];
 		
-		if(ind_get == size-1) {
-			ind_get = 0;
-		} else {
-			ind_get++;
-		}
+		ind_get = (ind_get == size-1) ? 0 : ind_get + 1;
 		
 		acquired++;
+		
+		System.out.printf("Consumer Thread %d has consumed 1 message\n", 
+				Thread.currentThread().getId());
+		
 		if (acquired == total) {
 			System.out.println("Everything has been acquired !");
 			System.exit(0);
@@ -87,23 +92,29 @@ public class ProdConsBuffer implements IProdConsBuffer{
 	public Message[] get(int k) throws InterruptedException {
 		try {
 			Message[] msgs = new Message[k];
-			s.acquire();
-			for (Message msg : msgs) {
+			this.s.acquire();
+			for (@SuppressWarnings("unused") Message msg : msgs) {
 				msg = this.get();
 			}
 			return msgs;
 		} finally {
-			s.release();
+			System.out.printf("Consumer Thread %d has consumed %d message\n", 
+				Thread.currentThread().getId(), k);
+			this.s.release();
 		}
 	}
 
 	@Override
 	public int nmsg() {
-		return nb;
+		return this.nb;
 	}
 
 	@Override
 	public int totmsg() {
-		return total;
+		return this.total;
+	}
+
+	public void incrTot(long restants) {
+		this.total += (int) restants;
 	}
 }

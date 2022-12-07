@@ -2,6 +2,11 @@ package prodcons.v3;
 
 import java.util.concurrent.Semaphore;
 
+/**
+ * L'affichage peut être incohérent si les threads sont commutés
+ * au 'mauvais' endroit dans le run de Consumer.java et Producer.java
+ */
+
 public class ProdConsBuffer implements IProdConsBuffer{
 
 	private static ProdConsBuffer instance;
@@ -16,8 +21,8 @@ public class ProdConsBuffer implements IProdConsBuffer{
 	private int ind_get;
 	
 	private static Semaphore sinst;
-	private static Semaphore sput;
-	private static Semaphore sget;
+	private Semaphore sput;
+	private Semaphore sget;
 	
 	private ProdConsBuffer(int n) {
 		this.buffer = new Message[n];
@@ -28,19 +33,19 @@ public class ProdConsBuffer implements IProdConsBuffer{
 		this.nb = 0;
 		
 		this.ind_put = 0;
-		this.ind_get = 0;
+		this.ind_get = 0;		
+		this.sput = new Semaphore(n);
+		this.sget = new Semaphore(n);
 	}
 	
 	public static ProdConsBuffer getInstance(int n) throws InterruptedException {
 		try {
 			if (instance == null){
-				instance = new ProdConsBuffer(n);		
-				ProdConsBuffer.sinst= new Semaphore(0);	
-				ProdConsBuffer.sput = new Semaphore(n);
-				ProdConsBuffer.sget = new Semaphore(n);
+				instance = new ProdConsBuffer(n);
+				ProdConsBuffer.sinst= new Semaphore(0);
 			}
 			ProdConsBuffer.sinst.acquire();
-			return instance;		
+			return instance;
 		} finally {
 			ProdConsBuffer.sinst.release();
 		}
@@ -89,5 +94,9 @@ public class ProdConsBuffer implements IProdConsBuffer{
 	@Override
 	public final int totmsg() {
 		return total;
+	}
+	
+	public void incrTot(long restants) {
+		this.total += (int) restants;
 	}
 }
