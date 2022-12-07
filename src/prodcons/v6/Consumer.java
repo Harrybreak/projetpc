@@ -23,7 +23,8 @@ public class Consumer implements Runnable {
 		while (restants > 0) {
 			try {
 				Thread.sleep(this.temps);
-				ProdConsBuffer.getInstance(TestProdCons.TAILLE).get(this.nomnom = (int)(Math.random() * ((double)this.restants - 1.0)) + 1);
+				ProdConsBuffer.getInstance(TestProdCons.TAILLE).
+				get(this.nomnom = (int)(Math.random() * ((double)this.restants - 1.0)) + 1);
 				restants -= this.nomnom;
 			}
 			catch (InterruptedException e) {

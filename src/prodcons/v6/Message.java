@@ -10,6 +10,11 @@ public class Message {
 		this.length = content.length();
 	}
 	
+	public Message() {
+		this.content = "q";
+		this.length = content.length();
+	}
+
 	public int get_length() {
 		return length;
 	}

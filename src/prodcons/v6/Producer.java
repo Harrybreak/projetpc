@@ -1,14 +1,16 @@
 package prodcons.v6;
 
-public class Producer implements Runnable{
+public class Producer implements Runnable {
 	private Thread th;
 	private long temps;
 	private long restants;
+	private int producedAtOnce;
 	
 	public Producer(long nMin, long nMax, long temps) {
 		this.temps = temps;
 		this.restants = (long)
 				(Math.random() * (double)(nMax - nMin)) + nMin;
+		this.producedAtOnce = 0;
 		this.th = new Thread(this);
 		this.th.start();
 		System.out.printf(
@@ -22,8 +24,10 @@ public class Producer implements Runnable{
 		while (restants > 0) {
 			try {
 				Thread.sleep(this.temps);
-				ProdConsBuffer.getInstance(TestProdCons.TAILLE).put(new Message("q"));
-				restants--;
+				ProdConsBuffer.getInstance(TestProdCons.TAILLE).
+				put(new Message(), 
+						this.producedAtOnce = (int)(Math.random() * ((double)this.restants - 1.0)) + 1);
+				restants -= this.producedAtOnce;
 			}
 			catch (InterruptedException e) {
 				e.printStackTrace();
