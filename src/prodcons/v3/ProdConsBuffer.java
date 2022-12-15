@@ -82,11 +82,13 @@ public class ProdConsBuffer implements IProdConsBuffer{
 		System.out.printf("Consumer Thread %d has consumed 1 message, %d remaining messages\n",
 				Thread.currentThread().getId(), this.getRemaining());
 		
-		sput.release();
 		if (acquired == total) {
 			System.out.println("Everything has been acquired !\n");
 			System.exit(0);
 		}
+		
+		sput.release();
+		
 		return msg;
 	}
 

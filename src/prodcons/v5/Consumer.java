@@ -41,7 +41,6 @@ public class Consumer implements Runnable {
 				ProdConsBuffer.getInstance(TestProdCons.TAILLE).
 				get(this.nomnom = (int)(Math.random() * ((double)this.restants - 1.0)) + 1);
 				restants -= this.nomnom;
-				System.out.printf("Consumer Thread %d has consumed %d message, %d remaining messages\n", this.th.getId(), this.nomnom, this.restants);
 			}
 			catch (InterruptedException e) {
 				e.printStackTrace();
