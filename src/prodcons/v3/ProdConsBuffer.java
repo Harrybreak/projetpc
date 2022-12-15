@@ -23,6 +23,7 @@ public class ProdConsBuffer implements IProdConsBuffer{
 	private static Semaphore sinst = new Semaphore(1);
 	private Semaphore sput;
 	private Semaphore sget;
+	private Semaphore s;
 	
 	private ProdConsBuffer(int n) {
 		this.buffer = new Message[n];
@@ -36,6 +37,7 @@ public class ProdConsBuffer implements IProdConsBuffer{
 		this.ind_get = 0;		
 		this.sput = new Semaphore(n);
 		this.sget = new Semaphore(n);
+		this.s = new Semaphore(1);
 	}
 	
 	public static ProdConsBuffer getInstance(int n) throws InterruptedException {
@@ -70,6 +72,7 @@ public class ProdConsBuffer implements IProdConsBuffer{
 	@Override
 	public Message get() throws InterruptedException {
 		sget.acquire();
+		s.acquire();
 		Message msg = buffer[ind_get];
 		
 		if(ind_get == size) {
@@ -81,12 +84,13 @@ public class ProdConsBuffer implements IProdConsBuffer{
 		acquired++;
 		System.out.printf("Consumer Thread %d has consumed 1 message, %d remaining messages\n",
 				Thread.currentThread().getId(), this.getRemaining());
-		
-		sput.release();
+
 		if (acquired == total) {
 			System.out.println("Everything has been acquired !\n");
 			System.exit(0);
 		}
+		s.release();
+		sput.release();
 		return msg;
 	}
 

@@ -26,7 +26,6 @@ public class Producer implements Runnable{
 				Thread.sleep(this.temps);
 				ProdConsBuffer.getInstance(TestProdCons.TAILLE).put(new Message("q"));
 				restants--;
-				System.out.printf("Producer Thread %d has produced 1 message, %d remaining messages\n", this.th.getId(), this.restants);
 			}
 			catch (InterruptedException e) {
 				e.printStackTrace();

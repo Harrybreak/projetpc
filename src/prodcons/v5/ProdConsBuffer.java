@@ -51,6 +51,8 @@ public class ProdConsBuffer implements IProdConsBuffer{
 		} else {
 			ind_put++;
 		}
+		System.out.printf("Producer Thread %d has produced 1 message, %d remaining messages\n",
+				Thread.currentThread().getId(), this.getRemaining());
 		notifyAll();
 	}
 
@@ -68,6 +70,8 @@ public class ProdConsBuffer implements IProdConsBuffer{
 		}
 		
 		acquired++;
+		System.out.printf("Consumer Thread %d has consumed 1 message, %d remaining messages\n",
+				Thread.currentThread().getId(), this.getRemaining());
 		if (acquired == total) {
 			System.out.println("Everything has been acquired !");
 			System.exit(0);
@@ -101,7 +105,11 @@ public class ProdConsBuffer implements IProdConsBuffer{
 	public int totmsg() {
 		return total;
 	}
-
+	
+	public final int getRemaining() {
+		return total - acquired;
+	}
+	
 	public void incrTot(long restants) {
 		this.total += (int) restants;
 	}
