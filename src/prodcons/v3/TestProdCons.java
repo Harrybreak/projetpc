@@ -25,6 +25,9 @@ public class TestProdCons {
 			p.join();
 		for (Consumer c : consommateurs)
 			c.join();
+		
+		System.out.printf("Remaining messages at the end : %d\n",
+				ProdConsBuffer.getInstance(TAILLE).getRemaining());
 	}
 	
 	

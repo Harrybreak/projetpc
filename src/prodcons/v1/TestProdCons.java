@@ -10,7 +10,10 @@ public class TestProdCons {
 	public static int nProd, nCons;
 	public static long prodTime, consTime, prodMax, prodMin, mCons;
 	
-	public static void main(String[] args) throws InterruptedException, InvalidPropertiesFormatException, IOException {
+	public static void main(String[] args) throws
+				InterruptedException, 
+				InvalidPropertiesFormatException, 
+				IOException {
 		loadData();
 		
 		Producer[] producteurs   = new Producer[nProd];

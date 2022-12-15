@@ -20,7 +20,7 @@ public class ProdConsBuffer implements IProdConsBuffer{
 	private int ind_put;
 	private int ind_get;
 	
-	private static Semaphore sinst;
+	private static Semaphore sinst = new Semaphore(1);
 	private Semaphore sput;
 	private Semaphore sget;
 	
@@ -40,11 +40,10 @@ public class ProdConsBuffer implements IProdConsBuffer{
 	
 	public static ProdConsBuffer getInstance(int n) throws InterruptedException {
 		try {
+			ProdConsBuffer.sinst.acquire();
 			if (instance == null){
 				instance = new ProdConsBuffer(n);
-				ProdConsBuffer.sinst= new Semaphore(0);
 			}
-			ProdConsBuffer.sinst.acquire();
 			return instance;
 		} finally {
 			ProdConsBuffer.sinst.release();
@@ -96,7 +95,12 @@ public class ProdConsBuffer implements IProdConsBuffer{
 		return total;
 	}
 	
+	public final int getRemaining() {
+		return total - acquired;
+	}
+	
 	public void incrTot(long restants) {
 		this.total += (int) restants;
+		System.out.printf("UPDATE : %d messages to consume !\n", this.total);
 	}
 }

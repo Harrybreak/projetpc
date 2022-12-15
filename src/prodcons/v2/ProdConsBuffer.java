@@ -39,7 +39,6 @@ public class ProdConsBuffer implements IProdConsBuffer{
 		buffer[ind_put] = m;
 		
 		nb++;
-		total++;
 		
 		if(ind_put == size) {
 			ind_put = 0;
@@ -81,5 +80,9 @@ public class ProdConsBuffer implements IProdConsBuffer{
 	@Override
 	public int totmsg() {
 		return total;
+	}
+
+	public void incrTot(long restants) {
+		this.total += (int) restants;
 	}
 }

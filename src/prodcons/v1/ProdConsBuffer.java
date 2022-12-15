@@ -35,6 +35,9 @@ public class ProdConsBuffer implements IProdConsBuffer{
 			wait();
 		}
 		buffer[ind_put] = m;
+
+		System.out.printf("Producer Thread %d has produced 1 message\n",
+				Thread.currentThread().getId());
 		
 		nb++;
 		total++;
@@ -53,6 +56,8 @@ public class ProdConsBuffer implements IProdConsBuffer{
 			wait();
 		}
 		Message msg = buffer[ind_get];
+		System.out.printf("Consumer Thread %d has consumed 1 message\n",
+				Thread.currentThread().getId());
 		
 		if(ind_get == size) {
 			ind_get = 0;
