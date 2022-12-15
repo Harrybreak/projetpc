@@ -21,7 +21,6 @@ public class Consumer implements Runnable {
 				Thread.sleep(this.temps);
 				ProdConsBuffer.getInstance(TestProdCons.TAILLE).get();
 				restants--;
-				System.out.printf("Consumer Thread %d has consumed 1 message, %d remaining messages\n", this.th.getId(), this.restants);
 			}
 			catch (InterruptedException e) {
 				e.printStackTrace();

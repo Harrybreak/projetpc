@@ -55,13 +55,15 @@ public class ProdConsBuffer implements IProdConsBuffer{
 		sput.acquire();
 		buffer[ind_put] = m;
 		
-		total++;
-		
 		if(ind_put == size) {
 			ind_put = 0;
 		} else {
 			ind_put++;
 		}
+
+		System.out.printf("Producer Thread %d has produced 1 message, %d remaining messages\n",
+				Thread.currentThread().getId(), this.getRemaining());
+		
 		sget.release();
 	}
 
@@ -77,6 +79,9 @@ public class ProdConsBuffer implements IProdConsBuffer{
 		}
 		
 		acquired++;
+		System.out.printf("Consumer Thread %d has consumed 1 message, %d remaining messages\n",
+				Thread.currentThread().getId(), this.getRemaining());
+		
 		sput.release();
 		if (acquired == total) {
 			System.out.println("Everything has been acquired !\n");
